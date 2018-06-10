@@ -7,6 +7,7 @@ RUN mkdir $BUILD_DIR && \
     chown -R build:wheel $BUILD_DIR && \
     echo "%wheel      ALL=(ALL) ALL" >> /etc/sudoers && \
     echo "Defaults:build   !authenticate" >> /etc/sudoers 
+#%wheel ALL=(ALL) NOPASSWD: ALL
 WORKDIR $BUILD_DIR
 
 #TODO remove, confirm if taken care of in aur?
