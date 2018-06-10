@@ -2,13 +2,14 @@ FROM base/devel
 
 RUN useradd -m -g wheel -s /bin/bash build
 
-RUN mkdir /opt/rippled && chown -R build:wheel /opt/rippled-rpm
-RUN echo "%wheel      ALL=(ALL) ALL" >> /etc/sudoers
-RUN echo "Defaults:build   !authenticate" >> /etc/sudoers
-WORKDIR /opt/rippled
+ENV BUILD_DIR /opt/rippled
+RUN mkdir $BUILD_DIR && \
+    chown -R build:wheel $BUILD_DIR && \
+    echo "%wheel      ALL=(ALL) ALL" >> /etc/sudoers && \
+    echo "Defaults:build   !authenticate" >> /etc/sudoers 
+WORKDIR $BUILD_DIR
 
 #TODO remove, confirm if taken care of in aur?
-#
 ## RUN git clone https://github.com/ripple/rippled.git
 ## RUN git clone https://github.com/ripple/validator-keys-tool.git
 ## COPY rippled.spec ./
