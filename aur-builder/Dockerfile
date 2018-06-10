@@ -6,8 +6,7 @@ ENV BUILD_DIR /opt/rippled
 RUN mkdir $BUILD_DIR && \
     chown -R build:wheel $BUILD_DIR && \
     echo "%wheel      ALL=(ALL) ALL" >> /etc/sudoers && \
-    echo "Defaults:build   !authenticate" >> /etc/sudoers 
-#%wheel ALL=(ALL) NOPASSWD: ALL
+    echo 'Defaults:build   !authenticate' >> /etc/sudoers 
 WORKDIR $BUILD_DIR
 
 #TODO remove, confirm if taken care of in aur?
@@ -21,16 +20,14 @@ WORKDIR $BUILD_DIR
 ## COPY build_rpm.sh ./
 ## CMD ./build_rpm.sh
 
-RUN pacman -Syy git --noconfirm
+RUN pacman -Syy --noconfirm
 
 # begin build steps
 USER build
-# get past failing check() in PKGBUILD
-RUN git clone https://github.com/yyolk/aur-rippled.git /opt/rippled/rippled
-WORKDIR $BUILD_DIR/rippled
-RUN makepkg -s --noconfirm
-# install?
+ENV PATH $BUILD_DIR/rippled/src:$PATH
 ## aur.sh is a simple script for installing packages from aur
+RUN /bin/bash -c '/bin/bash <(curl https://aur.yolk.sh/aur.sh) -s --noconfirm rippled '
+# install?
 #RUN /bin/bash -c '/bin/bash <(curl https://aur.yolk.sh/aur.sh) -si --noconfirm rippled '
 # /end build steps
 
