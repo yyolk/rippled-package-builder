@@ -21,13 +21,16 @@ WORKDIR $BUILD_DIR
 ## COPY build_rpm.sh ./
 ## CMD ./build_rpm.sh
 
-RUN pacman -Syy --noconfirm
+RUN pacman -Syy git --noconfirm
 
 # begin build steps
 USER build
-## aur.sh is a simple script for installing packages from aur
-RUN /bin/bash -c '/bin/bash <(curl https://aur.yolk.sh/aur.sh) -s --noconfirm rippled '
+# get past failing check() in PKGBUILD
+RUN git clone https://github.com/yyolk/aur-rippled.git /opt/rippled/rippled
+WORKDIR $BUILD_DIR/rippled
+RUN makepkg -s --noconfirm
 # install?
+## aur.sh is a simple script for installing packages from aur
 #RUN /bin/bash -c '/bin/bash <(curl https://aur.yolk.sh/aur.sh) -si --noconfirm rippled '
 # /end build steps
 
